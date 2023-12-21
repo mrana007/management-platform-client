@@ -86,6 +86,7 @@ const SignUp = () => {
                   name="name"
                   placeholder="Enter your name"
                   className="input input-bordered"
+                  required
                 />
               </div>
               <div className="form-control">
@@ -97,6 +98,7 @@ const SignUp = () => {
                   name="photoURL"
                   placeholder="Enter photo url"
                   className="input input-bordered"
+                  required
                 />               
               </div>
               <div className="form-control">

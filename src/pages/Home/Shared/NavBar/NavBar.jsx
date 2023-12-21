@@ -43,8 +43,9 @@ const Navbar = () => {
               {navOptions}
             </ul>
           </div>
-          <div>
-          <a className="text-xl">SCC Technovision Inc.</a>
+          <div className="flex items-center gap-2">
+            <img className="w-10" src="https://i.ibb.co/Qk50f9F/time-management.png" />
+          <a className="text-xl font-bold">SCC Technovision Inc.</a>
           </div>
         </div>
         <div className="navbar-center hidden lg:flex">
