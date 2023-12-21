@@ -1,8 +1,10 @@
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa6";
+import useTasks from "../hooks/useTasks";
 
 const CreateTask = () => {
+    const [ , refetch ] = useTasks();
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
   const handleCreateTask = async (data) => {
@@ -15,6 +17,7 @@ const CreateTask = () => {
     });
     if (res) {
       toast.success("Task created successfully");
+      refetch();
       document.getElementById("my_modal_5").close();
     }
     reset();

@@ -7,14 +7,39 @@ import Swal from "sweetalert2";
 const Tasks = () => {
   const [tasks, refetch] = useTasks();
 
-  
+  const handleDelete = async (id) => {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            const res = await fetch(`http://localhost:5000/tasks/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (res) {
+                refetch();
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success"
+                });
+            }
+        }
+    });
+};
 
   return (
     <div className="grid gap-2 grid-cols-3 py-8">
       <div>
         <div className="p-4 bg-[#CAD9F6] border rounded">
           <div>
-            <h2 className="text-sm font-semibold">To do</h2>
+            <h2 className="text-sm font-semibold">To Do</h2>
           </div>
           {/* to do list */}
           {tasks
@@ -26,7 +51,7 @@ const Tasks = () => {
                     <h2 className="font-bold text-base">{task?.title}</h2>
                     <div className="flex gap-2">
                       <MdOutlineModeEditOutline />
-                      <RiDeleteBin6Line  />
+                      <RiDeleteBin6Line onClick={() => handleDelete(task?._id)} />
                     </div>
                   </div>
                   <p className="text-[#5C5C5C] text-sm mt-1">
