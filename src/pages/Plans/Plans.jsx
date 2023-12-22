@@ -15,7 +15,7 @@ const Plans = () => {
         <div className="flex flex-col items-center bg-slate-100 p-8 rounded-lg shadow-lg max-w-sm">
           <div>
             <h2 className="font-extrabold text-3xl text-center mb-2">
-              Star Plan
+              Start Plan
             </h2>
             <p className="opacity-60 text-center">
               All the basic for boost your creativity

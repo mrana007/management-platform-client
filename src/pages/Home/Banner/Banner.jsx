@@ -10,7 +10,7 @@ const Banner = () => {
         <div className="flex-1 w-full p-2 pl-4 mx-auto">
           <h2 className="font-bold text-4xl text-white">Master Your Day: Your Ultimate To Do List for Seamless Productivity and Achievement</h2>
           <div className="mt-4">
-            <Link to="/login">
+            <Link to="/dashboard">
               <button className="btn hover:bg-green-700 hover:text-white    hover:border-none font-medium">Let’s Explore<FaArrowRightLong className=" font-thin" />
               </button>
             </Link>
