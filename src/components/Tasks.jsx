@@ -21,7 +21,6 @@ const Tasks = () => {
         const res = await fetch(`https://task-management-platform-server-theta.vercel.app/${id}`, {
           method: "DELETE",
         });
-
         if (res) {
           refetch();
           Swal.fire({
@@ -33,6 +32,10 @@ const Tasks = () => {
       }
     });
   };
+
+  const handleUpdate = (id) =>{
+    
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-2 py-8">
@@ -55,7 +58,7 @@ const Tasks = () => {
                         className=""
                         onClick={() =>
                           document.getElementById("my_modal_3").showModal()}>
-                        <MdOutlineModeEditOutline />
+                        <MdOutlineModeEditOutline onClick={ () =>handleUpdate(task._id)} />
                       </button>
                       <dialog id="my_modal_3" className="modal">
                         <div className="modal-box">
@@ -63,16 +66,25 @@ const Tasks = () => {
                         <form>
                           <input
                           className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
-                          type="text" />
+                          type="text"
+                          name="title"
+                          defaultValue= {task?.title}
+                          />
                           <input
                           className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
-                          type="text" />
+                          type="text" 
+                          name="description"
+                          />
+                          
                           <input
                           className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
-                          type="text" />
+                          type="text" 
+                          name="priority"/>
                           <input
                           className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
-                          type="text" />
+                          type="text"
+                          name="status" 
+                          />
                           <div className="flex justify-end">
                           <input
                           className="bg-green-900 text-white rounded py-1 px-4 text-sm"
