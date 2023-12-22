@@ -1,15 +1,23 @@
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoIosSearch } from "react-icons/io";
-import { NavLink } from "react-router-dom";
+import { IoHomeOutline } from "react-icons/io5";
+import { Link, NavLink } from "react-router-dom";
 import Tasks from "../components/Tasks";
 import CreateTask from "../components/CreateTask";
 
 const Dashboard = () => {
   return (
     <div className="">
-      <div className="flex">
-        <div className="w-[300px] p-8">
-          <img src="https://iili.io/JAwAeb2.png" alt="" />
+      <div className="flex flex-col md:flex-row">
+        <div className="w-[350px] p-8">
+          <Link to="/">
+          <button className="btn w-full mx-auto bg-green-800 hover:bg-green-600">
+            <div className="flex items-center gap-1 text-white">
+              <IoHomeOutline className="text-lg"></IoHomeOutline>
+            <h2>SCC TECHNOVISION</h2>
+            </div>
+          </button>
+          </Link>
           <ul className="flex flex-col gap-4 mt-16">
             <li>
               <button className="w-full">
@@ -31,9 +39,8 @@ const Dashboard = () => {
               <div className="flex gap-4 items-center justify-end w-[20%]">
                 <IoMdNotificationsOutline className="w-[25px] h-[25px]" />
                 <img
-                  className="w-[30px] h-[30px]"
-                  src="https://i.ibb.co/yNPwYyk/User-Avatar.png"
-                  alt=""
+                  className="w-9 rounded-full"
+                  src="https://i.ibb.co/cxddwLx/placeholder.jpg"
                 />
               </div>
             </div>

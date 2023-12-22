@@ -13,6 +13,10 @@ const Navbar = () => {
   const navOptions = (
     <>
       <NavLink to="/" className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "active bg-green-800 text-white font-semibold px-4 py-2 rounded" : "px-4 py-2"}>Home</NavLink>
+      <NavLink to="/plans" className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "active bg-green-800 text-white font-semibold px-4 py-2 rounded" : "px-4 py-2"}>Our Plans</NavLink>
+      {
+        user && <NavLink to="/dashboard" className={({ isActive, isPending }) => isPending ? "pending" : isActive ? "active bg-green-800 text-white font-semibold px-4 py-2 rounded" : "px-4 py-2"}>DashBoard</NavLink>
+      }
     </>
   );
 
@@ -45,7 +49,7 @@ const Navbar = () => {
           </div>
           <div className="flex items-center gap-2">
             <img className="w-10" src="https://i.ibb.co/Qk50f9F/time-management.png" />
-          <a className="text-xl font-bold">SCC Technovision Inc.</a>
+          <a className="text-xl font-bold">SCC TECHNOVISION Inc.</a>
           </div>
         </div>
         <div className="navbar-center hidden lg:flex">
@@ -73,9 +77,6 @@ const Navbar = () => {
               {
                 user?.email ? <>
                   <p className="justify-between pl-3">{user?.displayName}</p>
-                <li>
-                  <Link to="/dashboard">DashBoard</Link>
-                </li>
                 <li>
                   <button onClick={handleLogOut}>Logout</button>
                 </li>

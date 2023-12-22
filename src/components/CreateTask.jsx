@@ -31,8 +31,7 @@ const CreateTask = () => {
       <div>
         <button
           className="btn bg-[#2563DC] text-white rounded py-2 px-6 flex items-center gap-2 text-sm"
-          onClick={() => document.getElementById("my_modal_5").showModal()}
-        >
+          onClick={() => document.getElementById("my_modal_5").showModal()}>
           Create Task <FaPlus></FaPlus>
         </button>
         <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
@@ -51,8 +50,7 @@ const CreateTask = () => {
               <input
                 {...register("description", { required: true })}
                 className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
-                placeholder="Task Description"
-              />
+                placeholder="Task Description"/>
               {errors.description && (
                   <span className="text-red-600 text-xs block">Description is required</span>
                 )}
@@ -60,8 +58,7 @@ const CreateTask = () => {
               <input
                 {...register("priority", { required: true })}
                 className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
-                placeholder="Task priority"
-              />
+                placeholder="Task priority"/>
               {errors.priority && (
                   <span className="text-red-600 text-xs block">Priority is required</span>
                 )}
@@ -69,15 +66,12 @@ const CreateTask = () => {
                 {...register("status", { required: true })}
                 className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
                 placeholder="Status"
-                defaultValue={"to-do"}
-              />
-              <br />
+                defaultValue={"to-do"}/>
               <div className="flex justify-end">
                 <input
                   className="bg-[#2563DC] text-white rounded py-1 px-4 text-sm"
                   type="submit"
-                  value="Create Task"
-                />
+                  value="Create Task"/>
               </div>
             </form>
             <div className="modal-action">
