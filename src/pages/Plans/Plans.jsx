@@ -1,12 +1,12 @@
 const Plans = () => {
   return (
-    <div className="min-h-screen my-28">
+    <div className="min-h-screen my-24">
       <div>
         <h3 className="text-center text-3xl font-bold">
           Our Plans for your ToDO
         </h3>
         <p className="text-center px-2">
-          Check what plan is best for your, We are care about your convenience
+          Check what plan is best for you, We are care about your convenience
           in <br /> using the application, so you can update your plan up or
           down any time
         </p>
@@ -80,7 +80,7 @@ const Plans = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center bg-slate-100 p-8 rounded-lg shadow-lg max-w-sm">
+        <div className="flex flex-col items-center bg-green-100 p-8 rounded-lg shadow-lg max-w-sm">
           <div>
             <h2 className="font-extrabold text-3xl text-center mb-2">
               Standard Plan
