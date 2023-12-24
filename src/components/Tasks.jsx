@@ -1,11 +1,55 @@
-import useTasks from "../hooks/useTasks";
-
+import { useEffect, useState } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Swal from "sweetalert2";
+import useTasks from "../hooks/useTasks";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 const Tasks = () => {
-  const [tasks, refetch] = useTasks();
+  const [data, refetch] = useTasks();
+
+  const axiosPublic = useAxiosPublic();
+
+  const [sections, setSections] = useState({
+    todo: [],
+    ongoing: [],
+    completed: [],
+  });
+
+  useEffect(() => {
+    if (data) {
+      setSections({
+        todo: data.filter((item) => item.status === "to-do"),
+        ongoing: data.filter((item) => item.status === "ongoing"),
+        completed: data.filter((item) => item.status === "completed"),
+      });
+    }
+  }, [data]);
+
+  const onDragEnd = async (result) => {
+    if (!result.destination) return;
+
+    // Update local state immediately
+    const updatedSections = { ...sections };
+    const [moveTask] = updatedSections[result.source.droppableId].splice(
+      result.source.index,
+      1
+    );
+    updatedSections[result.destination.droppableId].splice(
+      result.destination.index,
+      0,
+      moveTask
+    );
+    setSections(updatedSections);
+
+    const order = result.destination.index + 1;
+    await axiosPublic.patch("/Tasks", {
+      id: moveTask._id,
+      status: result.destination.droppableId,
+      order,
+    });
+  };
 
   const handleDelete = async (id) => {
     Swal.fire({
@@ -18,9 +62,13 @@ const Tasks = () => {
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = await fetch(`https://task-management-platform-server-theta.vercel.app/${id}`, {
-          method: "DELETE",
-        });
+        const res = await fetch(
+          `https://task-management-platform-server-theta.vercel.app/Tasks/${id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
         if (res) {
           refetch();
           Swal.fire({
@@ -33,140 +81,79 @@ const Tasks = () => {
     });
   };
 
-  const handleUpdate = (id) =>{
-    
-  }
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 py-8">
-      <div>
-        <div className="p-4 bg-[#CAD9F6] border rounded">
-          <div>
-            <h2 className="text-sm font-semibold">To Do</h2>
-          </div>
-          {/* to do list */}
-          {tasks
-            ?.filter((task) => task?.status?.includes("to-do"))
-            ?.map((task) => (
-              <>
-                <div className="bg-white rounded p-2 mt-2" key={task._id}>
-                  <div className="flex justify-between items-center">
-                    <h2 className="font-bold text-base">{task?.title}</h2>
-                    <div className="flex gap-2">
-                      {/* update tasks */}
-                      <button
-                        className=""
-                        onClick={() =>
-                          document.getElementById("my_modal_3").showModal()}>
-                        <MdOutlineModeEditOutline onClick={ () =>handleUpdate(task._id)} />
-                      </button>
-                      <dialog id="my_modal_3" className="modal">
-                        <div className="modal-box">
-                        <h3 className="font-bold text-lg">Update Task</h3>
-                        <form>
-                          <input
-                          className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
-                          type="text"
-                          name="title"
-                          defaultValue= {task?.title}
-                          />
-                          <input
-                          className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
-                          type="text" 
-                          name="description"
-                          />
-                          
-                          <input
-                          className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
-                          type="text" 
-                          name="priority"/>
-                          <input
-                          className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
-                          type="text"
-                          name="status" 
-                          />
-                          <div className="flex justify-end">
-                          <input
-                          className="bg-green-900 text-white rounded py-1 px-4 text-sm"
-                          type="submit"
-                          value="Update Task" />
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div className="grid lg:grid-cols-3 gap-6 mt-10">
+        {Object.keys(sections).map((sectionKey) => (
+          <div
+            className={`border-2 px-5 py-3 text-center rounded-md ${
+              sectionKey === "todo" ? "bg-[#CAD9F6]" : sectionKey === "ongoing" ? "bg-[#FFE4C2]" : sectionKey === "completed" ? "bg-[#FAD0C6]" : ""
+            }`} key={sectionKey} >
+            <h2 className="text-[18px] font-bold">
+              {sectionKey.charAt(0).toUpperCase() + sectionKey.slice(1)}
+            </h2>
+
+            <Droppable droppableId={sectionKey} key={sectionKey}>
+              {(provided) => (
+                <ul
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  className="rounded-md my-5 text-left"
+                >
+                  {sections[sectionKey].map((task, index) => (
+                    <Draggable
+                      key={task._id}
+                      draggableId={task._id}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <li
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          ref={provided.innerRef}
+                          className="p-2 border capitalize bg-white shadow-lg border-green-500 rounded-md my-3"
+                        >
+                          <p>
+                            <span className="font-semibold">Task Title:</span>{" "}
+                            {task?.title}
+                          </p>
+                          <p>
+                            <span className="font-semibold">
+                              Task Description:
+                            </span>{" "}
+                            {task?.description}
+                          </p>
+                          <p>
+                            <span className="font-semibold">
+                              Task Priority:
+                            </span>{" "}
+                            {task?.priority}
+                          </p>
+                          <p>
+                            <span className="font-semibold">
+                              Task Deadline:
+                            </span>{" "}
+                            {task?.deadline}
+                          </p>
+                          <div className="flex justify-end gap-3 hover:cursor-pointer">
+                            <MdOutlineModeEditOutline className="text-2xl" />
+                            <RiDeleteBin6Line
+                              className="text-2xl text-red-500 hover:text-red-700"
+                              onClick={() => handleDelete(task?._id)}
+                            />
                           </div>
-                        </form>
-                          <form method="dialog">
-                            {/* if there is a button in form, it will close the modal */}
-                            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                              ✕
-                            </button>
-                          </form>
-                        </div>
-                      </dialog>
-                      {/* delete */}
-                      <RiDeleteBin6Line
-                        className="text-red-600"
-                        onClick={() => handleDelete(task?._id)} />
-                    </div>
-                  </div>
-                  <p className="text-[#5C5C5C] text-sm mt-1">
-                    {task?.description}
-                  </p>
-                </div>
-              </>
-            ))}
-        </div>
-      </div>
-      <div>
-        <div className="p-4 bg-[#FFE4C2] border rounded">
-          <div>
-            <h2 className="text-sm font-semibold">On Going</h2>
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
           </div>
-          {/* ongoing list */}
-          {tasks
-            ?.filter((task) => task?.status?.includes("ongoing"))
-            ?.map((task) => (
-              <>
-                <div className="bg-white rounded p-2 mt-2" key={task._id}>
-                  <div className="flex justify-between items-center">
-                    <h2 className="font-bold text-base">{task?.title}</h2>
-                    <div className="flex gap-2">
-                      <MdOutlineModeEditOutline />
-                      <RiDeleteBin6Line />
-                    </div>
-                  </div>
-                  <p className="text-[#5C5C5C] text-sm mt-1">
-                    {task?.description}
-                  </p>
-                </div>
-              </>
-            ))}
-        </div>
+        ))}
       </div>
-      <div>
-        <div className="p-4 bg-[#FAD0C6] border rounded">
-          <div>
-            <h2 className="text-sm font-semibold">Completed</h2>
-          </div>
-          {/* completed list */}
-          {tasks
-            ?.filter((task) => task?.status?.includes("completed"))
-            ?.map((task) => (
-              <>
-                <div className="bg-white rounded p-2 mt-2" key={task._id}>
-                  <div className="flex justify-between items-center">
-                    <h2 className="font-bold text-base">{task?.title}</h2>
-                    <div className="flex gap-2">
-                      <MdOutlineModeEditOutline />
-                      <RiDeleteBin6Line />
-                    </div>
-                  </div>
-                  <p className="text-[#5C5C5C] text-sm mt-1">
-                    {task?.description}
-                  </p>
-                </div>
-              </>
-            ))}
-        </div>
-      </div>
-    </div>
+    </DragDropContext>
   );
 };
 

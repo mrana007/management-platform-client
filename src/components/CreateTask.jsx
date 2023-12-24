@@ -8,7 +8,8 @@ const CreateTask = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
   const handleCreateTask = async (data) => {
-    const res = await fetch("http://localhost:5000/tasks", {
+    data.order = "1";
+    const res = await fetch("https://task-management-platform-server-theta.vercel.app/tasks", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,6 +40,7 @@ const CreateTask = () => {
             <h3 className="font-bold text-lg">Create New Task</h3>
             {/* create task form */}
             <form onSubmit={handleSubmit(handleCreateTask)}>
+            <label>Title</label> 
               <input
                 {...register("title", { required: true })}
                 className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
@@ -46,7 +48,7 @@ const CreateTask = () => {
                 {errors.title && (
                   <span className="text-red-600 text-xs block">Title is required</span>
                 )}
-              
+              <label>Description</label> 
               <input
                 {...register("description", { required: true })}
                 className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
@@ -54,19 +56,29 @@ const CreateTask = () => {
               {errors.description && (
                   <span className="text-red-600 text-xs block">Description is required</span>
                 )}
-              
-              <input
+              <label>Priority</label>
+              <select             
                 {...register("priority", { required: true })}
-                className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
-                placeholder="Task priority"/>
+                className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2">
+                  <option value="Low">Low</option>
+                  <option value="Moderate">Moderate</option>
+                  <option value="High">High</option>
+                  </select>
               {errors.priority && (
                   <span className="text-red-600 text-xs block">Priority is required</span>
                 )}
+                <label>Status</label>               
               <input
                 {...register("status", { required: true })}
                 className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
                 placeholder="Status"
                 defaultValue={"to-do"}/>
+                <label>Date</label> 
+                <input
+                {...register("deadline", { required: true })}
+                className="border focus:outline-none py-1 px-2 rounded-sm w-full mb-2"
+                type="date"
+                placeholder="Task Deadline"/>              
               <div className="flex justify-end">
                 <input
                   className="bg-[#2563DC] text-white rounded py-1 px-4 text-sm"
